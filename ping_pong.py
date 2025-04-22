@@ -1,5 +1,5 @@
 from pygame import *
-
+from random import randint
 # вынесем размер окна в константы для удобства
 # W - width, ширина
 # H - height, высота
@@ -12,6 +12,10 @@ x2 = 640
 y2 = 10
 w1 = 50
 h1 = 200
+w_ball = 75
+h_ball = 75
+y_ball = WIN_H / 2
+x_ball = (WIN_W - w_ball) / 2
 step = 5
 # создание окна размером 700 на 500
 window = display.set_mode((WIN_W, WIN_H))
@@ -59,25 +63,23 @@ class Player(GameSprite):
 class Enemy(Player):
     def __init__(self, img, x, y, w, h):
         super().__init__(img, x, y, w, h)
-        self.rect.x = randint(0, 575)
-        self.rect.y = randint(0, 40)
+
     
     def update(self):
-        if self.rect.y >= WIN_H:
-            self.rect.x = randint(0, 575)
-            self.rect.y = randint(0, 40)
         self.rect.y += self.speed
 
 
 
 player1 = Player('rb_noobb.png', x1, y1, w1, h1)
 player2 = Player('rb_noobb.png', x2, y2, w1, h1)
-
+ball = Enemy('roblox.jpg', x_ball, y_ball, w_ball, h_ball)
 game = True
 while game:
     window.blit(background,(0, 0))
     player1.draw(window)
     player2.draw(window)
+    ball.draw(window)
+
     for e in event.get():
 
         if e.type == QUIT:
