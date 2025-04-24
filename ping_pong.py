@@ -7,9 +7,9 @@ WIN_W = 700
 WIN_H = 500
 FPS = 60
 x1 = 10
-y1 = 10
+y1 = 5
 x2 = 640
-y2 = 10
+y2 = 5
 w1 = 50
 h1 = 200
 w_ball = 75
@@ -52,21 +52,28 @@ class Player(GameSprite):
         super().__init__(img, x, y, w, h)
         self.speed = speed
 
-    def update(self, left, right):
+    def update(self, up, down):
         keys_pressed = key.get_pressed()
-        if keys_pressed[left] and self.rect.x > 5:
-            self.rect.x -= step
-        if keys_pressed[right] and self.rect.x < WIN_W - size:
-            self.rect.x += step
+        if keys_pressed[up] and self.rect.y > 5:
+            self.rect.y -= step
+        if keys_pressed[down] and self.rect.y < WIN_H - self.rect.h:
+            self.rect.y += step
 
 
 class Enemy(Player):
-    def __init__(self, img, x, y, w, h):
+    def __init__(self, img, x, y, w, h, speed = 3):
         super().__init__(img, x, y, w, h)
-
-    
+        self.speed_y = speed
+        self.speed_x = speed
     def update(self):
-        self.rect.y += self.speed
+        if self.rect.y <= 0 or self.rect.y >= WIN_H - self.rect.h:
+            self.speed_y *= -1
+        self.rect.y += self.speed_y
+        if self.rect.x <= 0 or self.rect.x >= WIN_W - self.rect.w:
+            self.speed_x *= -1
+        self.rect.x += self.speed_x
+
+
 
 
 
@@ -77,8 +84,17 @@ game = True
 while game:
     window.blit(background,(0, 0))
     player1.draw(window)
+    player1.update(K_w, K_s)
     player2.draw(window)
+    player2.update(K_UP, K_DOWN)
+
+
     ball.draw(window)
+    ball.update()
+    if sprite.collide_rect(player1, ball):
+        ball.speed_x *= -1
+    if sprite.collide_rect(player2, ball):
+        ball.speed_x *= -1
 
     for e in event.get():
 
