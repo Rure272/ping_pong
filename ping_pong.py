@@ -17,18 +17,21 @@ h_ball = 75
 y_ball = WIN_H / 2
 x_ball = (WIN_W - w_ball) / 2
 step = 5
-# создание окна размером 700 на 500
+RED = (255, 0, 0)
+
+font.init()
+title_font = font.SysFont('arial', 35)
+lost1 = title_font.render('Проиграл игрок №1', True, RED)
+lost2 = title_font.render('Проиграл игрок №2', True, RED)
 window = display.set_mode((WIN_W, WIN_H))
-# создание таймера
+
 clock = time.Clock()
 
-# название окна
+
 display.set_caption("пинг-понг")
 
-# задать картинку фона такого же размера, как размер окна
 background = transform.scale(
     image.load("grey.jpg"),
-    # здесь - размеры картинки
     (WIN_W, WIN_H)
 )
 
@@ -74,27 +77,36 @@ class Enemy(Player):
         self.rect.x += self.speed_x
 
 
-
-
-
 player1 = Player('rb_noobb.png', x1, y1, w1, h1)
 player2 = Player('rb_noobb.png', x2, y2, w1, h1)
 ball = Enemy('roblox.jpg', x_ball, y_ball, w_ball, h_ball)
+finish = False
 game = True
 while game:
-    window.blit(background,(0, 0))
-    player1.draw(window)
-    player1.update(K_w, K_s)
-    player2.draw(window)
-    player2.update(K_UP, K_DOWN)
+    if not finish:       
+        window.blit(background,(0, 0))
+        player1.draw(window)
+        player1.update(K_w, K_s)
+        player2.draw(window)
+        player2.update(K_UP, K_DOWN)
 
 
-    ball.draw(window)
-    ball.update()
-    if sprite.collide_rect(player1, ball):
-        ball.speed_x *= -1
-    if sprite.collide_rect(player2, ball):
-        ball.speed_x *= -1
+        ball.draw(window)
+        ball.update()
+        if sprite.collide_rect(player1, ball):
+            ball.speed_x *= -1
+        if sprite.collide_rect(player2, ball):
+            ball.speed_x *= -1
+        if ball.rect.x <= 0:
+            window.blit(lost1, (200, 200))
+            display.update()
+            finish = True
+        if ball.rect.x >= WIN_W - ball.rect.w:
+            window.blit(lost2, (200, 200))
+            display.update()
+            finish = True        
+
+
 
     for e in event.get():
 
