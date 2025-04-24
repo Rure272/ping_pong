@@ -80,6 +80,8 @@ class Enemy(Player):
 player1 = Player('rb_noobb.png', x1, y1, w1, h1)
 player2 = Player('rb_noobb.png', x2, y2, w1, h1)
 ball = Enemy('roblox.jpg', x_ball, y_ball, w_ball, h_ball)
+
+
 finish = False
 game = True
 while game:
@@ -105,7 +107,11 @@ while game:
             window.blit(lost2, (200, 200))
             display.update()
             finish = True        
-
+    else:
+        ball.kill()
+        time.delay(3000)
+        finish = False
+        ball = Enemy('roblox.jpg', x_ball, y_ball, w_ball, h_ball)
 
 
     for e in event.get():
